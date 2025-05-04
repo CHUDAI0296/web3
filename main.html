@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Web3 Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { margin:0; background:#f5f5f7; color:#222; font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;}
+    main { padding-bottom:70px; }
+    .nav-bar {
+      position:fixed; left:0; right:0; bottom:0; height:60px; background:#fff; border-top:1px solid #e5e5ea; display:flex; justify-content:space-around; align-items:center; z-index:10;
+    }
+    .nav-bar a {
+      flex:1; text-align:center; color:#555; text-decoration:none; font-size:1rem; padding:0.5rem 0; transition:color 0.2s;
+    }
+    .nav-bar a.active, .nav-bar a:hover { color:#007aff; font-weight:600;}
+    @media (min-width: 700px) {
+      .nav-bar { max-width:500px; margin:0 auto; left:50%; transform:translateX(-50%);}
+    }
+    .section { padding:2rem 1rem; text-align:center; display:none;}
+    .section.active { display:block; }
+    h2 { color:#007aff; margin-bottom:1rem; }
+    /* 首页卡片 */
+    .home-cards { display:flex; flex-wrap:wrap; justify-content:center; gap:1.5rem; margin-top:2rem; }
+    .card { background:#fff; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:1.2rem 1.5rem; min-width:180px; max-width:220px; flex:1 1 180px; }
+    .card h3 { margin:0 0 0.5rem 0; color:#007aff; font-size:1.1rem; }
+    .card p { margin:0; color:#555; font-size:0.98rem; }
+    /* 行情tabs */
+    .market-tabs, .news-tabs, .trend-tabs { display:flex; justify-content:center; gap:0.5rem; margin-bottom:1.2rem; flex-wrap:wrap; }
+    .market-tabs button, .news-tabs button, .trend-tabs button {
+      background:#f5f5f7; border:1px solid #e5e5ea; color:#007aff; padding:0.5rem 1.1rem; border-radius:8px; font-size:1rem; cursor:pointer; transition:background 0.2s, color 0.2s;
+    }
+    .market-tabs button.active, .news-tabs button.active, .trend-tabs button.active,
+    .market-tabs button:hover, .news-tabs button:hover, .trend-tabs button:hover {
+      background:#007aff; color:#fff;
+    }
+    /* 图表iframe容器 */
+    .iframe-container { width:100%; aspect-ratio:16/9; background:#e5e5ea; border-radius:12px; overflow:hidden; margin-bottom:1.5rem; border:1px solid #e5e5ea; box-shadow:0 1px 4px rgba(0,0,0,0.03); }
+    /* 我的 */
+    .profile-list { list-style:none; padding:0; margin:2rem auto 0 auto; max-width:320px; }
+    .profile-list li { margin-bottom:1rem; }
+    .profile-list button { width:100%; padding:0.8rem 0; border-radius:8px; border:1px solid #e5e5ea; background:#fff; color:#007aff; font-size:1rem; font-weight:600; cursor:pointer; transition:background 0.2s, color 0.2s; }
+    .profile-list button:hover { background:#007aff; color:#fff; }
+    @media (max-width: 700px) {
+      .home-cards { flex-direction:column; align-items:center; }
+      .card { min-width:0; width:100%; max-width:100%; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <!-- 首页 -->
+    <section class="section active" id="home">
+      <h2>Home</h2>
+      <div class="home-cards">
+        <div class="card">
+          <h3>Funding Rate</h3>
+          <p>Latest funding rates for major cryptocurrencies.</p>
+        </div>
+        <div class="card">
+          <h3>Cumulative Rate</h3>
+          <p>Track cumulative funding rates over time.</p>
+        </div>
+        <div class="card">
+          <h3>Open Interest</h3>
+          <p>Monitor open interest across exchanges.</p>
+        </div>
+      </div>
+    </section>
+    <!-- 行情 -->
+    <section class="section" id="market">
+      <h2>Market</h2>
+      <div class="market-tabs">
+        <button class="active" onclick="showMarketTab('cryptos', this)">Cryptos</button>
+        <button onclick="showMarketTab('indicators', this)">Indicators</button>
+        <button onclick="showMarketTab('exchanges', this)">Exchanges</button>
+      </div>
+      <div id="market-cryptos">[Crypto list here]</div>
+      <div id="market-indicators" style="display:none;">[Indicators here]</div>
+      <div id="market-exchanges" style="display:none;">[Exchanges here]</div>
+    </section>
+    <!-- 图表 -->
+    <section class="section" id="charts">
+      <h2>Charts</h2>
+      <div class="trend-tabs">
+        <button class="active" onclick="showChart('hour', this)">Hour</button>
+        <button onclick="showChart('day', this)">Day</button>
+        <button onclick="showChart('week', this)">Week</button>
+        <button onclick="showChart('month', this)">Month</button>
+        <button onclick="showChart('year', this)">Year</button>
+      </div>
+      <div class="iframe-container" id="chart-content">
+        <!-- TradingView or other chart iframe here -->
+        <iframe src="https://www.tradingview.com/embed-widget/mini-symbol-overview/?symbol=BINANCE:BTCUSDT&locale=en" style="width:100%;height:100%;border:0;" allowfullscreen></iframe>
+      </div>
+    </section>
+    <!-- 新闻 -->
+    <section class="section" id="news">
+      <h2>News</h2>
+      <div class="news-tabs">
+        <button class="active" onclick="showNewsTab('featured', this)">Featured</button>
+        <button onclick="showNewsTab('flash', this)">Flash</button>
+      </div>
+      <div id="news-featured">[Featured news here]</div>
+      <div id="news-flash" style="display:none;">[Flash news here]</div>
+    </section>
+    <!-- 我的 -->
+    <section class="section" id="profile">
+      <h2>My</h2>
+      <ul class="profile-list">
+        <li><button>Login / Register</button></li>
+        <li><button>Appearance</button></li>
+        <li><button>Prediction</button></li>
+        <li><button>Share</button></li>
+        <li><button>Rate Us</button></li>
+      </ul>
+    </section>
+  </main>
+  <nav class="nav-bar">
+    <a href="#home" class="active" onclick="showTab('home', this)">Home</a>
+    <a href="#market" onclick="showTab('market', this)">Market</a>
+    <a href="#charts" onclick="showTab('charts', this)">Charts</a>
+    <a href="#news" onclick="showTab('news', this)">News</a>
+    <a href="#profile" onclick="showTab('profile', this)">My</a>
+  </nav>
+  <script>
+    // 主tab切换
+    function showTab(tab, el) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById(tab).classList.add('active');
+      document.querySelectorAll('.nav-bar a').forEach(a => a.classList.remove('active'));
+      el.classList.add('active');
+    }
+    // 行情子tab切换
+    function showMarketTab(tab, el) {
+      document.querySelectorAll('.market-tabs button').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('market-cryptos').style.display = tab === 'cryptos' ? '' : 'none';
+      document.getElementById('market-indicators').style.display = tab === 'indicators' ? '' : 'none';
+      document.getElementById('market-exchanges').style.display = tab === 'exchanges' ? '' : 'none';
+    }
+    // 图表子tab切换
+    function showChart(period, el) {
+      document.querySelectorAll('.trend-tabs button').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+      // 这里只是示例，实际可根据 period 切换不同的行情图表
+      const iframe = document.getElementById('chart-content').querySelector('iframe');
+      let symbol = "BINANCE:BTCUSDT";
+      let url = "https://www.tradingview.com/embed-widget/mini-symbol-overview/?symbol=" + symbol + "&locale=en";
+      iframe.src = url;
+    }
+    // 新闻子tab切换
+    function showNewsTab(tab, el) {
+      document.querySelectorAll('.news-tabs button').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('news-featured').style.display = tab === 'featured' ? '' : 'none';
+      document.getElementById('news-flash').style.display = tab === 'flash' ? '' : 'none';
+    }
+  </script>
+</body>
+</html> 
